@@ -31,6 +31,9 @@
 #define THINKSPEAK_CHANNEL 18368
 #define WRITE_API_KEY  "90XWZZ5O18452PB9"
 
+// IFTTT
+#define IFTTT_KEY "......."
+
 #endif
 
 // IFTTT
@@ -91,7 +94,7 @@ void loop() {
     cpm=105;
     counts = 0;
     display.clear();
-    displayString("Radioctivity", 64, 0);
+    displayString("Radioactivity", 64, 0);
     displayInt(cpm, 64, 30);
     postThinspeak(cpm);
     if (cpm > 100 ) IFTTT( EVENT_NAME, cpm);
