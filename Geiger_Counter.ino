@@ -21,15 +21,16 @@
 
 #define LOG_PERIOD 20000 //Logging period in milliseconds
 #define MINUTE_PERIOD 60000
+#define WIFI_TIMEOUT_DEF 30
 
 #ifndef CREDENTIALS
 // WLAN
-#define mySSID "WLAN"
-#define myPASSWORD "**************"
+#define mySSID "SSID"
+#define myPASSWORD "password"
 
 //Thinspeak
-#define THINKSPEAK_CHANNEL 18368
-#define WRITE_API_KEY  "90XWZZ5O18452PB9"
+#define THINKSPEAK_CHANNEL 123456
+#define WRITE_API_KEY  "key"
 
 // IFTTT
 #define IFTTT_KEY "......."
@@ -72,9 +73,16 @@ void setup() {
 
   WiFi.begin(mySSID, myPASSWORD);
 
+  int wifi_loops=0;
+  int wifi_timeout = WIFI_TIMEOUT_DEF;
   while (WiFi.status() != WL_CONNECTED) {
+    wifi_loops++;
     Serial.print(".");
     delay(500);
+    if (wifi_loops>wifi_timeout)
+      {
+        software_Reset();
+      }
   }
   Serial.println();
   Serial.println("Wi-Fi Connected");
@@ -86,18 +94,25 @@ void setup() {
 }
 
 void loop() {
+	
   unsigned long currentMillis = millis();
+  
+  if (WiFi.status() != WL_CONNECTED)
+  {
+	  software_Reset();
+	}
 
   if (currentMillis - previousMillis > LOG_PERIOD) {
     previousMillis = currentMillis;
     cpm = counts * MINUTE_PERIOD / LOG_PERIOD;
-    cpm=105;
+    //cpm=105;
     counts = 0;
     display.clear();
     displayString("Radioactivity", 64, 0);
     displayInt(cpm, 64, 30);
     postThinspeak(cpm);
     if (cpm > 100 ) IFTTT( EVENT_NAME, cpm);
+	
   }
 }
 
@@ -158,3 +173,9 @@ void displayString(String dispString, int x, int y) {
 }
 
 
+/****reset***/
+void software_Reset() // Restarts program from beginning but does not reset the peripherals and registers
+{
+Serial.print("resetting");
+esp_restart(); 
+}
