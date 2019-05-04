@@ -3,7 +3,7 @@
    in a sane fashion. the original file i forked from just set CPM to 105 and 
    didn't really work anyhow, as the count was reset every 20 seconds.
    There's an issue with my understanding of the way variables work, so please
-   feel free to fix my cludge with the clock1 and start variables. when they 
+   feel free to fix my kludge with the clock1 and start variables. when they 
    were in the loop the "minutes" never changed.
 */
 
