@@ -27,7 +27,7 @@ unsigned long cpm = 0;                                   // CPM
 unsigned long previousMillis;                            // Time measurement
 const int inputPin = 7;
 unsigned int thirds = 0;
-unsigned long minutes;
+unsigned long minutes = 1;
 unsigned long start = 0;
 
 #define LOG_PERIOD 20000 //Logging period in milliseconds
@@ -67,7 +67,7 @@ void loop() {
     //cpm = counts * MINUTE_PERIOD / LOG_PERIOD; this is just counts times 3 so:
 
     cpm = counts / minutes;
-        
+    Serial.print("Total clicks since start: ");    
     Serial.println(String(counts));
     Serial.print("Rolling CPM: ");
     Serial.println(String(cpm));
