@@ -61,6 +61,9 @@ void loop() {
     // Serial.print("previousMillis: ");
     // Serial.println(String(previousMillis));
     minutes = (previousMillis - start) / MINUTE_PERIOD;
+    if (minutes < 1) {
+      minutes = 1;
+  }
     // Serial.print("minutes: ");
     // Serial.println(String(minutes));
 
