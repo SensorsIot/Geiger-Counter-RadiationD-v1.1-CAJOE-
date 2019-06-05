@@ -5,6 +5,8 @@
    There's an issue with my understanding of the way variables work, so please
    feel free to fix my cludge with the clock1 and start variables. when they 
    were in the loop the "minutes" never changed.
+
+   trying to create PR
 */
 
 /*
