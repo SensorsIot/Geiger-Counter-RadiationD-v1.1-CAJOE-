@@ -1,3 +1,12 @@
+/* 
+   edited by genewitch to actually provide clicks per minute on the serial port
+   in a sane fashion. the original file i forked from just set CPM to 105 and 
+   didn't really work anyhow, as the count was reset every 20 seconds.
+   There's an issue with my understanding of the way variables work, so please
+   feel free to fix my kludge with the clock1 and start variables. when they 
+   were in the loop the "minutes" never changed.
+*/
+
 /*
    Geiger.ino
 
@@ -12,6 +21,7 @@
 
    Please use freely with attribution. Thank you!
 */
+
 
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
@@ -55,11 +65,16 @@ WiFiClientSecure secure_client;
 IFTTTMaker ifttt(IFTTT_KEY, secure_client);
 SSD1306  display(0x3c, 5, 4);
 
-
 volatile unsigned long counts = 0;                       // Tube events
 unsigned long cpm = 0;                                   // CPM
 unsigned long previousMillis;                            // Time measurement
-const int inputPin = 26;
+const int inputPin = 7;
+unsigned int thirds = 0;
+unsigned long minutes = 1;
+unsigned long start = 0;
+
+#define LOG_PERIOD 20000 //Logging period in milliseconds
+#define MINUTE_PERIOD 60000
 
 void ISR_impulse() { // Captures count of events from Geiger counter board
   counts++;
@@ -91,6 +106,8 @@ void setup() {
   pinMode(inputPin, INPUT);                                                // Set pin for capturing Tube events
   interrupts();                                                            // Enable interrupts
   attachInterrupt(digitalPinToInterrupt(inputPin), ISR_impulse, FALLING); // Define interrupt on falling edge
+  unsigned long clock1 = millis();
+  start = clock1;
 }
 
 void loop() {
@@ -103,7 +120,9 @@ void loop() {
 	}
 
   if (currentMillis - previousMillis > LOG_PERIOD) {
+    
     previousMillis = currentMillis;
+
     cpm = counts * MINUTE_PERIOD / LOG_PERIOD;
     //cpm=105;
     counts = 0;
@@ -112,33 +131,25 @@ void loop() {
     displayInt(cpm, 64, 30);
     postThinspeak(cpm);
     if (cpm > 100 ) IFTTT( EVENT_NAME, cpm);
-	
   }
-}
+    // Serial.print("minutes: ");
+    // Serial.println(String(minutes));
 
-void postThinspeak(int postValue) {
-  if (client.connect(server, 80)) {
+    //cpm = counts * MINUTE_PERIOD / LOG_PERIOD; this is just counts times 3 so:
 
-    // Construct API request body
-    String body = "field1=";
-    body += String(postValue);
-
-    Serial.print("Radioactivity (CPM): ");
-    Serial.println(postValue);
-
-    client.print("POST /update HTTP/1.1\n");
-    client.print("Host: api.thingspeak.com\n");
-    client.print("Connection: close\n");
-    client.print("X-THINGSPEAKAPIKEY: " + String(WRITE_API_KEY) + "\n");
-    client.print("Content-Type: application/x-www-form-urlencoded\n");
-    client.print("Content-Length: ");
-    client.print(body.length());
-    client.print("\n\n");
-    client.print(body);
-    client.print("\n\n");
-
+    cpm = counts / minutes;
+    Serial.print("Total clicks since start: ");    
+    Serial.println(String(counts));
+    Serial.print("Rolling CPM: ");
+    Serial.println(String(cpm));
+    
+//    if ( thirds > 2) {
+//      counts = 0;
+//      thirds = 0;  
+//    }
+    
+    
   }
-  client.stop();
 }
 
 void IFTTT(String event, int postValue) {
