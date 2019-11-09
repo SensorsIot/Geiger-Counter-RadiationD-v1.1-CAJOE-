@@ -38,22 +38,13 @@
 #define mySSID "SSID"
 #define myPASSWORD "password"
 
-//Thinspeak
-#define THINKSPEAK_CHANNEL 123456
-#define WRITE_API_KEY  "key"
-
-// IFTTT
+//IFTT
 #define IFTTT_KEY "......."
 
 #endif
 
 // IFTTT
 #define EVENT_NAME "Radioactivity" // Name of your event name, set when you are creating the applet
-
-// ThingSpeak Settings
-const int channelID = THINKSPEAK_CHANNEL;
-const char* server = "api.thingspeak.com";
-
 
 char ssid[] = mySSID;
 
@@ -129,7 +120,6 @@ void loop() {
     display.clear();
     displayString("Radioactivity", 64, 0);
     displayInt(cpm, 64, 30);
-    postThinspeak(cpm);
     if (cpm > 100 ) IFTTT( EVENT_NAME, cpm);
   }
     // Serial.print("minutes: ");
