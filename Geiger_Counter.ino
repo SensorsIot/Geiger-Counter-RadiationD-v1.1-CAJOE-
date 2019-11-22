@@ -26,7 +26,7 @@
 #include <IFTTTMaker.h>
 #include <ThingSpeak.h>
 #include <SSD1306.h>
-#include <credentials.h> // or define mySSID and myPASSWORD and THINGSPEAK_API_KEY
+//#include <credentials.h> // or define mySSID and myPASSWORD and THINGSPEAK_API_KEY
 
 #define LOG_PERIOD 20000 //Logging period in milliseconds
 #define MINUTE_PERIOD 60000
