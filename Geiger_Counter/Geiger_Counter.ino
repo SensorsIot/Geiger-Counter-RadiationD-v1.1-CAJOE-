@@ -5,7 +5,7 @@
    and reports readings in CPM (Counts Per Minute).
    Connect the output of the Geiger counter to pin inputPin.
 
-   Please use Arduino JSON Library < version 6.0
+   ******* !!!!!!!!! Please use Arduino JSON Library < version 6.0
 
    Author: Andreas Spiess
    Based on initial work of Mark A. Heckler (@MkHeck, mark.heckler@gmail.com)
