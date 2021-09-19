@@ -6,6 +6,7 @@
    Connect the output of the Geiger counter to pin inputPin.
 
    ******* !!!!!!!!! Please use Arduino JSON Library < version 6.0
+   Install Thingspulse SSD1306 Library
 
    Author: Andreas Spiess
    Based on initial work of Mark A. Heckler (@MkHeck, mark.heckler@gmail.com)
